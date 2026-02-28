@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuoQuizizz - Tạo và Chơi Quiz</title>
+    <meta name="description" content="QuoQuizizz - Platform tao va choi quiz tuong tac chuyen nghiep">
+    <meta name="theme-color" content="#6366f1">
+    <title>QuoQuizizz - Tao va Choi Quiz</title>
+    
+    <!-- Preconnect for fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- CSS Files -->
     <link rel="stylesheet" href="css/variables.css">
@@ -21,6 +27,17 @@
     
     <!-- LZ-String for compression -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
+
+    <!-- Interactive Motion Background -->
+    <div id="motionBackground" aria-hidden="true">
+        <div class="motion-orb"></div>
+        <div class="motion-orb"></div>
+        <div class="motion-orb"></div>
+    </div>
+    <div class="particle-grid" aria-hidden="true"></div>
+    
+    <!-- Interactive Canvas for mouse-following particles -->
+    <canvas id="particleCanvas" aria-hidden="true" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
 
     <div class="app-layout">
         <!-- Sidebar Navigation -->
@@ -618,5 +635,124 @@
 
     <!-- Complete Application Script -->
     <script src="js/app.js"></script>
+    
+    <!-- Interactive Motion Background Script -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('particleCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: -1000, y: -1000 };
+        let animId;
+        
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 1.5;
+                this.speedY = (Math.random() - 0.5) * 1.5;
+                this.life = 1;
+                this.decay = Math.random() * 0.015 + 0.008;
+                this.hue = Math.random() * 60 + 220; // blue-purple range
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life -= this.decay;
+                this.size *= 0.995;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(${this.hue}, 80%, 65%, ${this.life * 0.4})`;
+                ctx.fill();
+            }
+        }
+        
+        let lastEmit = 0;
+        document.addEventListener('mousemove', function(e) {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            const now = Date.now();
+            if (now - lastEmit > 30) {
+                lastEmit = now;
+                for (let i = 0; i < 2; i++) {
+                    particles.push(new Particle(mouse.x, mouse.y));
+                }
+            }
+        });
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].life <= 0 || particles[i].size < 0.2) {
+                    particles.splice(i, 1);
+                }
+            }
+            
+            // Draw connections between nearby particles
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 80) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `hsla(240, 60%, 60%, ${(1 - dist / 80) * 0.12 * Math.min(particles[i].life, particles[j].life)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+            
+            animId = requestAnimationFrame(animate);
+        }
+        
+        // Only animate when tab is visible
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                cancelAnimationFrame(animId);
+            } else {
+                animate();
+            }
+        });
+        
+        // Check reduced motion preference
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (!prefersReducedMotion.matches) {
+            animate();
+        }
+        
+        // Intersection observer for scroll reveal
+        const revealElements = document.querySelectorAll('.reveal');
+        if (revealElements.length > 0) {
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            revealElements.forEach(function(el) {
+                observer.observe(el);
+            });
+        }
+    })();
+    </script>
 </body>
 </html>

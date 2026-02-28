@@ -1,18 +1,19 @@
-/* Theme Styling and Modal Styles */
+/* Theme Styling and Modal Styles - Premium */
 
-/* Theme Modal */
+/* ============ THEME MODAL ============ */
 .theme-modal {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2000;
-    animation: fadeIn 0.3s ease;
+    animation: fadeIn 0.2s ease;
+    backdrop-filter: blur(8px);
 }
 
 .theme-modal.hidden {
@@ -22,13 +23,14 @@
 .theme-modal-content {
     background: var(--container-bg);
     width: 90%;
-    max-width: 500px;
-    border-radius: 20px;
+    max-width: 480px;
+    border-radius: var(--radius-xl);
     padding: 0;
-    max-height: 80vh;
+    max-height: 85vh;
     overflow-y: auto;
-    animation: scaleIn 0.3s ease;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: scaleIn 0.3s var(--ease-out);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-subtle);
 }
 
 .theme-modal-header {
@@ -36,22 +38,22 @@
     justify-content: space-between;
     align-items: center;
     padding: 24px;
-    border-bottom: 1px solid var(--border-color);
-    background: var(--container-bg);
-    border-radius: 20px 20px 0 0;
+    border-bottom: 1px solid var(--border-subtle);
 }
 
 .theme-modal-header h3 {
     margin: 0;
-    font-size: 1.4rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
     color: var(--text-color);
     font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 .theme-modal-close {
-    background: var(--bg-color);
+    background: var(--bg-subtle);
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: var(--text-secondary);
     cursor: pointer;
     padding: 0;
@@ -61,12 +63,13 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    transition: all 0.2s;
+    transition: all var(--duration-normal);
 }
 
 .theme-modal-close:hover {
     background: var(--border-color);
     color: var(--text-color);
+    transform: rotate(90deg);
 }
 
 .theme-modal-body {
@@ -74,7 +77,7 @@
 }
 
 .theme-section {
-    margin-bottom: 30px;
+    margin-bottom: 28px;
 }
 
 .theme-section:last-child {
@@ -82,16 +85,17 @@
 }
 
 .theme-section h4 {
-    margin: 0 0 16px 0;
-    font-size: 1.05rem;
+    margin: 0 0 14px 0;
+    font-size: 0.95rem;
     color: var(--text-color);
     font-weight: 700;
+    font-family: var(--font-display);
 }
 
 .theme-options {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+    gap: 12px;
 }
 
 .theme-option {
@@ -99,39 +103,40 @@
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    padding: 18px 12px;
-    background: var(--bg-color);
-    border: 2px solid var(--border-color);
-    border-radius: 14px;
+    padding: 16px 12px;
+    background: var(--bg-subtle);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
     cursor: pointer;
-    transition: all 0.2s;
-    font-size: 0.92rem;
+    transition: all var(--duration-normal) var(--ease-out);
+    font-size: 0.85rem;
     color: var(--text-color);
     font-weight: 500;
+    font-family: var(--font-sans);
 }
 
 .theme-option:hover {
     border-color: var(--primary-color);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
 }
 
 .theme-option:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
 }
 
 .theme-option.active {
     border-color: var(--primary-color);
-    background: rgba(136, 84, 192, 0.1);
-    box-shadow: 0 0 0 3px rgba(136, 84, 192, 0.2);
+    background: var(--primary-light);
+    box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .theme-preview {
-    width: 55px;
-    height: 55px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     border: 3px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-sm);
 }
 
 .theme-toggle {
@@ -139,20 +144,21 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 20px;
-    background: var(--bg-color);
-    border: 2px solid var(--border-color);
-    border-radius: 14px;
+    padding: 16px 20px;
+    background: var(--bg-subtle);
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
     cursor: pointer;
-    transition: all 0.2s;
-    font-size: 1.05rem;
+    transition: all var(--duration-normal);
+    font-size: 0.95rem;
     color: var(--text-color);
     font-weight: 500;
+    font-family: var(--font-sans);
 }
 
 .theme-toggle:hover {
     border-color: var(--primary-color);
-    background: rgba(136, 84, 192, 0.05);
+    background: var(--primary-light);
 }
 
 .theme-toggle:active {
@@ -160,85 +166,76 @@
 }
 
 .toggle-icon {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
 }
 
 .toggle-text {
     flex: 1;
     text-align: left;
-    margin-left: 15px;
+    margin-left: 14px;
     font-weight: 500;
 }
 
-/* Tet Theme Backgrounds and Effects */
+/* ============ TET THEME ============ */
 body.tet-theme .quiz-play-area {
-    background: #8B0000;
+    background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 50%, #7f1d1d 100%);
 }
 
 body.tet-theme .quiz-play-area::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><radialGradient id="f1"><stop offset="0%25" style="stop-color:%23FFD700;stop-opacity:1"/><stop offset="40%25" style="stop-color:%23FF8C00;stop-opacity:0.7"/><stop offset="100%25" style="stop-color:%23DC143C;stop-opacity:0"/></radialGradient></defs><rect width="1200" height="800" fill="%231a1a2e"/></svg>');
-    background-size: cover;
-    background-position: center;
-    opacity: 0.7;
-    transition: opacity 0.3s;
-    pointer-events: none;
-    animation: none;
-}
-
-body.tet-theme .quiz-question-text {
-    background: linear-gradient(135deg, rgba(196, 30, 58, 0.95), rgba(139, 27, 46, 0.95));
-    color: #FFB81C;
-    border: 3px solid #FFB81C;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), inset 0 0 30px rgba(255, 184, 28, 0.1);
-}
-
-body.tet-theme .quiz-option-btn {
-    background: linear-gradient(135deg, #C41E3A 0%, #A01B2F 50%, #8B0000 100%);
-    color: #FFB81C;
-    border: 3px solid #FFB81C;
-    box-shadow: 0 8px 0 #660000, 0 10px 20px rgba(196, 30, 58, 0.4), inset 0 0 20px rgba(255, 184, 28, 0.08), 0 0 15px rgba(244, 208, 63, 0.15);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-body.tet-theme .quiz-option-btn:hover:not(:disabled) {
-    background: linear-gradient(135deg, #A01B2F 0%, #8B1B2E 50%, #660000 100%);
-    border-color: #FFD700;
-    box-shadow: 0 10px 0 #660000, 0 14px 24px rgba(196, 30, 58, 0.5), inset 0 0 20px rgba(255, 184, 28, 0.12);
-    transform: translateY(-4px);
-}
-
-body.tet-theme .quiz-option-btn.correct {
-    background: linear-gradient(135deg, #28a745, #20c997) !important;
-    color: white !important;
-    border-color: #28a745 !important;
-    box-shadow: 0 8px 0 #228B22, 0 10px 20px rgba(40, 167, 69, 0.5) !important;
-    animation: correctPulse 0.6s ease;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5) !important;
-}
-
-body.tet-theme .quiz-option-btn.incorrect {
-    background: linear-gradient(135deg, #dc3545, #c82333, #8B0000) !important;
-    color: white !important;
-    border-color: #8B0000 !important;
-    box-shadow: 0 8px 0 #660000, 0 10px 20px rgba(220, 20, 60, 0.5) !important;
-    animation: incorrectShake 0.6s ease;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5) !important;
+    background-image:
+        radial-gradient(2px 2px at 15% 25%, rgba(255, 215, 0, 0.6), transparent),
+        radial-gradient(2px 2px at 55% 65%, rgba(255, 215, 0, 0.5), transparent),
+        radial-gradient(1px 1px at 80% 20%, rgba(255, 215, 0, 0.4), transparent),
+        radial-gradient(1px 1px at 35% 85%, rgba(255, 215, 0, 0.5), transparent);
+    background-size: 200% 200%;
+    opacity: 0.5;
 }
 
 body.tet-theme .quiz-play-area::after {
-    content: '🎆 🎇 ✨ 🎆 🎇 ✨ 🎆 🎇 ✨ 🎆';
-    color: #FFD700;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 107, 53, 0.6);
+    content: '';
+    display: none;
 }
 
-/* Christmas Theme */
+body.tet-theme .quiz-question-text {
+    background: rgba(127, 29, 29, 0.85);
+    color: #fde68a;
+    border: 1px solid rgba(253, 224, 71, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 0 30px rgba(253, 224, 71, 0.05);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+body.tet-theme .quiz-option-btn {
+    background: rgba(127, 29, 29, 0.7);
+    color: #fde68a;
+    border: 1px solid rgba(253, 224, 71, 0.25);
+    box-shadow: 0 4px 0 rgba(69, 10, 10, 0.8), 0 6px 16px rgba(127, 29, 29, 0.4);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+body.tet-theme .quiz-option-btn:hover:not(:disabled) {
+    background: rgba(153, 27, 27, 0.8);
+    border-color: rgba(253, 224, 71, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 0 rgba(69, 10, 10, 0.9), 0 10px 24px rgba(127, 29, 29, 0.5);
+}
+
+body.tet-theme .quiz-option-btn.correct {
+    background: var(--success-color) !important;
+    color: white !important;
+    border-color: #34d399 !important;
+    box-shadow: 0 4px 0 #047857, 0 6px 16px rgba(16, 185, 129, 0.5) !important;
+    animation: correctPulse 0.6s ease;
+}
+
+body.tet-theme .quiz-option-btn.incorrect {
+    background: var(--danger-color) !important;
+    color: white !important;
+    border-color: #f87171 !important;
+    box-shadow: 0 4px 0 #991b1b, 0 6px 16px rgba(239, 68, 68, 0.5) !important;
+    animation: incorrectShake 0.6s ease;
+}
+
+/* ============ CHRISTMAS THEME ============ */
 body.christmas-theme .quiz-header::before {
     content: '';
     position: absolute;
@@ -246,128 +243,101 @@ body.christmas-theme .quiz-header::before {
     left: -40px;
     right: -40px;
     height: 200px;
-    background: linear-gradient(180deg, rgba(240, 250, 255, 0.95) 0%, rgba(230, 245, 252, 0.9) 50%, rgba(200, 240, 250, 0.5) 85%, transparent 100%);
+    background: linear-gradient(180deg, rgba(240, 250, 255, 0.9) 0%, rgba(230, 245, 252, 0.85) 50%, transparent 100%);
     border-radius: 0 0 50% 50% / 0 0 25% 25%;
     z-index: 2;
     pointer-events: none;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 body.christmas-theme .quiz-header::after {
-    content: '⛄';
-    position: absolute;
-    top: -165px;
-    left: 50px;
-    font-size: 110px;
-    z-index: 3;
-    pointer-events: none;
-    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.25));
-    animation: snowmanSway 3s ease-in-out infinite;
+    content: '';
+    display: none;
 }
 
 body.christmas-theme .quiz-play-area {
-    background: linear-gradient(180deg, #45A0B0 0%, #4DB5C5 50%, #5DBDCD 100%);
+    background: linear-gradient(180deg, #3b9ab0 0%, #4db5c5 50%, #5dbdcd 100%);
     position: relative;
 }
 
 body.christmas-theme .quiz-play-area::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-        radial-gradient(ellipse at 20% 50%, rgba(40, 90, 100, 0.3) 0%, transparent 30%),
-        radial-gradient(ellipse at 35% 60%, rgba(30, 80, 90, 0.25) 0%, transparent 25%);
-    pointer-events: none;
-    z-index: 1;
-}
-
-body.christmas-theme .quiz-question-text {
-    background-image: url('https://img.freepik.com/free-vector/gradient-snowing-winter-landscape_23-2149158225.jpg');
-    background-size: cover;
-    background-position: center;
-    color: #0d2838;
-    border: none;
-    border-bottom: 4px solid rgba(90, 160, 180, 0.8);
-    border-radius: 20px 20px 40px 40px;
-    box-shadow: 0 8px 0 rgba(90, 160, 180, 0.6), 0 12px 25px rgba(0, 0, 0, 0.2), inset 0 -3px 10px rgba(120, 190, 210, 0.3);
-    text-shadow: 2px 2px 6px rgba(255, 255, 255, 1), -2px -2px 6px rgba(255, 255, 255, 1), 0 0 20px rgba(255, 255, 255, 0.9), 0 0 40px rgba(255, 255, 255, 0.7);
-    font-weight: 800;
-}
-
-body.christmas-theme .quiz-option-btn {
-    background: linear-gradient(180deg, rgba(210, 245, 255, 0.95) 0%, rgba(195, 240, 250, 0.98) 100%);
-    color: #2D5A6B;
-    border: none;
-    border-bottom: 4px solid rgba(90, 160, 180, 0.8);
-    border-radius: 20px 20px 40px 40px;
-    box-shadow: 0 8px 0 rgba(90, 160, 180, 0.6), 0 12px 25px rgba(0, 0, 0, 0.2), inset 0 -3px 10px rgba(120, 190, 210, 0.3);
-    font-weight: 600;
-}
-
-body.christmas-theme .quiz-option-btn:hover:not(:disabled) {
-    background: linear-gradient(180deg, rgba(220, 250, 255, 1) 0%, rgba(205, 245, 255, 1) 100%);
-    box-shadow: 0 10px 0 rgba(90, 160, 180, 0.6), 0 14px 28px rgba(0, 0, 0, 0.25), inset 0 -3px 10px rgba(120, 190, 210, 0.4);
-    transform: translateY(-3px);
-}
-
-body.christmas-theme .quiz-option-btn.correct {
-    background: linear-gradient(180deg, #28a745, #20c997);
-    color: white;
-    border: none;
-    border-bottom: 4px solid #1a7a38;
-    box-shadow: 0 8px 0 #1a7a38, 0 12px 25px rgba(40, 167, 69, 0.5), inset 0 -3px 10px rgba(30, 120, 60, 0.3);
-}
-
-body.christmas-theme .quiz-option-btn.incorrect {
-    background: linear-gradient(180deg, #dc3545, #c82333);
-    color: white;
-    border: none;
-    border-bottom: 4px solid #8B0000;
-    box-shadow: 0 8px 0 #8B0000, 0 12px 25px rgba(220, 20, 60, 0.5), inset 0 -3px 10px rgba(160, 30, 40, 0.3);
+    background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(40, 90, 100, 0.25) 0%, transparent 25%),
+        radial-gradient(ellipse at 50% 55%, rgba(35, 85, 95, 0.25) 0%, transparent 23%);
+    opacity: 1;
 }
 
 body.christmas-theme .quiz-play-area::after {
-    content: '🎄🎁🍬';
-    position: fixed;
-    top: 85px;
-    right: 60px;
-    font-size: 95px;
-    z-index: 5;
-    pointer-events: none;
-    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.25));
-    letter-spacing: -8px;
+    content: '';
+    display: none;
 }
 
-.snowflake {
-    position: absolute;
+body.christmas-theme .quiz-question-text {
+    background: rgba(255, 255, 255, 0.85);
+    color: #0d2838;
+    border: none;
+    border-bottom: 3px solid rgba(90, 160, 180, 0.6);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    text-shadow: none;
+    backdrop-filter: blur(8px);
+}
+
+body.christmas-theme .quiz-option-btn {
+    background: rgba(255, 255, 255, 0.85);
+    color: #2d5a6b;
+    border: none;
+    border-bottom: 3px solid rgba(90, 160, 180, 0.6);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 4px 0 rgba(90, 160, 180, 0.5), 0 6px 16px rgba(0, 0, 0, 0.12);
+    font-weight: 600;
+    backdrop-filter: blur(8px);
+    text-shadow: none;
+}
+
+body.christmas-theme .quiz-option-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 0 rgba(90, 160, 180, 0.5), 0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
+body.christmas-theme .quiz-option-btn.correct {
+    background: var(--success-color);
     color: white;
-    font-size: 20px;
-    pointer-events: none;
-    z-index: 1;
-    animation: snowfall linear infinite;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    border: none;
+    border-bottom: 3px solid #047857;
+    box-shadow: 0 4px 0 #047857, 0 6px 16px rgba(16, 185, 129, 0.4);
+}
+
+body.christmas-theme .quiz-option-btn.incorrect {
+    background: var(--danger-color);
+    color: white;
+    border: none;
+    border-bottom: 3px solid #991b1b;
+    box-shadow: 0 4px 0 #991b1b, 0 6px 16px rgba(239, 68, 68, 0.4);
 }
 
 body.christmas-theme .quiz-score-header {
     background: linear-gradient(135deg, #0a5d7d 0%, #084d6d 100%);
-    border-top: 3px solid #00CED1;
+    border-top: 2px solid var(--accent-color);
 }
 
 body.christmas-theme .quiz-rank-badge {
-    background: linear-gradient(135deg, #00CED1, #87CEEB);
+    background: linear-gradient(135deg, #06b6d4, #87ceeb);
     color: #000;
 }
 
-body.christmas-theme .quiz-score-display {
-    color: #00CED1;
-    text-shadow: 0 0 8px rgba(0, 206, 209, 0.5);
+body.christmas-theme .quiz-progress-badge {
+    background: linear-gradient(135deg, #06b6d4, #87ceeb);
+    color: #000;
 }
 
 body.christmas-theme .quiz-settings-header {
-    background: linear-gradient(135deg, #00CED1, #0a5d7d);
+    background: linear-gradient(135deg, #06b6d4, #0a5d7d);
+}
+
+body.christmas-theme .quiz-settings-content {
+    background: linear-gradient(135deg, #0a5d7d, #084d6d);
+    border: 2px solid #06b6d4;
 }
 
 body.christmas-theme .quiz-settings-body {
@@ -375,18 +345,44 @@ body.christmas-theme .quiz-settings-body {
 }
 
 body.christmas-theme .setting-group label {
-    color: #FFFFFF;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: #ffffff;
 }
 
 body.christmas-theme .setting-group select {
     background: rgba(10, 61, 93, 0.8);
     color: white;
-    border-color: #00CED1;
+    border-color: #06b6d4;
 }
 
-body.christmas-theme .quiz-progress-badge {
-    background: linear-gradient(135deg, #00CED1, #87CEEB);
-    color: #000;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+.snowflake {
+    position: absolute;
+    color: white;
+    font-size: 18px;
+    pointer-events: none;
+    z-index: 1;
+    animation: snowfall linear infinite;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+    opacity: 0.7;
+}
+
+/* ============ TET THEME BACKGROUNDS ============ */
+body.tet-theme {
+    background-image: none;
+}
+
+body.tet-theme::before {
+    background:
+        radial-gradient(ellipse 600px 600px at 20% 20%, rgba(220, 38, 38, 0.08), transparent),
+        radial-gradient(ellipse 500px 500px at 80% 80%, rgba(245, 158, 11, 0.06), transparent);
+}
+
+/* Christmas Background */
+body.christmas-theme {
+    background-image: none;
+}
+
+body.christmas-theme::before {
+    background:
+        radial-gradient(ellipse 600px 600px at 20% 20%, rgba(22, 163, 74, 0.08), transparent),
+        radial-gradient(ellipse 500px 500px at 80% 80%, rgba(220, 38, 38, 0.06), transparent);
 }
