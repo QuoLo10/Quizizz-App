@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuoQuizizz - Tạo và Chơi Quiz</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Sound Effects -->
+    <audio id="correctSound" src="sound/correct.mp3" preload="auto"></audio>
+    <audio id="wrongSound" src="sound/incorrect.mp3" preload="auto"></audio>
+    
+    <!-- LZ-String for compression -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
+
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <h2>🎯 QuoQuizizz</h2>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="nav-home" onclick="switchView('home');">
+                            <span class="nav-icon">🏠</span>
+                            <span>Trang chủ</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-create" onclick="switchView('creator');">
+                            <span class="nav-icon">✏️</span>
+                            <span>Tạo Quiz</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-library" onclick="switchView('library');">
+                            <span class="nav-icon">📚</span>
+                            <span>Thư viện</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-student" onclick="switchView('student');">
+                            <span class="nav-icon">👨‍🎓</span>
+                            <span>Làm Quiz</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-history" onclick="switchView('history');">
+                            <span class="nav-icon">📖</span>
+                            <span>Lịch sử làm bài</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div style="display:flex; align-items:center;">
+                    <div class="brand-badge" id="brand-badge">QuoQuizizz</div>
+                    <div class="header-title" id="header-title-text">Chào mừng đến Quiz Master! 👋</div>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-settings-btn" id="theme-settings-btn">
+                        <span class="settings-icon">⚙️</span>
+                        <span class="settings-text">Theme & Cài đặt</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Home View -->
+                <div id="homeView">
+                    <div class="page-header">
+                        <h1 class="page-title">Chào mừng đến Quiz Master! 👋</h1>
+                        <p class="page-subtitle">Tạo quiz tương tác hoặc bắt đầu làm bài ngay</p>
+                    </div>
+                    
+                    <div class="feature-cards">
+                        <div class="feature-card" id="home-create-card" onclick="switchView('creator');" style="cursor: pointer;">
+                            <div class="feature-icon">✏️</div>
+                            <h3>Tạo mới</h3>
+                            <p>Tạo quiz trắc nghiệm và đúng/sai</p>
+                        </div>
+                        <div class="feature-card" id="home-student-card" onclick="switchView('student');" style="cursor: pointer;">
+                            <div class="feature-icon">🔍</div>
+                            <h3>Làm Quiz</h3>
+                            <p>Tải lên và làm bài quiz</p>
+                        </div>
+                        <div class="feature-card" id="home-library-card" onclick="switchView('creator');" style="cursor: pointer;">
+                            <div class="feature-icon">📚</div>
+                            <h3>Thư viện</h3>
+                            <p>Xem các quiz đã tạo</p>
+                        </div>
+                        <div class="feature-card" id="home-history-card" onclick="switchView('history');" style="cursor: pointer;">
+                            <div class="feature-icon">📖</div>
+                            <h3>Lịch sử</h3>
+                            <p>Xem lại các bài đã làm</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Creator View -->
+                <div id="creatorView" class="hidden">
+                    <!-- Quiz Type Selector (Initial View) -->
+                    <div id="quizTypeSelector">
+                        <div class="page-header">
+                            <h1 class="page-title">Chọn loại câu hỏi 📝</h1>
+                            <p class="page-subtitle">Chọn định dạng câu hỏi bạn muốn tạo</p>
+                        </div>
+                        
+                        <div class="quiz-type-cards">
+                            <div class="quiz-type-card" onclick="selectQuizType('multiple')">
+                                <div class="quiz-type-icon">✅</div>
+                                <h3>Trắc nghiệm</h3>
+                                <p>Câu hỏi với nhiều lựa chọn, chỉ một đáp án đúng</p>
+                                <div class="quiz-type-badge">Popular</div>
+                            </div>
+                            <div class="quiz-type-card" onclick="selectQuizType('truefalse')">
+                                <div class="quiz-type-icon">⭕❌</div>
+                                <h3>Đúng/Sai</h3>
+                                <p>Đánh giá tính đúng/sai của các mệnh đề</p>
+                                <div class="quiz-type-badge">Quick</div>
+                            </div>
+                            <div class="quiz-type-card" onclick="selectQuizType('essay')">
+                                <div class="quiz-type-icon">📄</div>
+                                <h3>Tự luận</h3>
+                                <p>Câu hỏi yêu cầu trả lời chi tiết bằng văn bản</p>
+                                <div class="quiz-type-badge">New</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Multiple Choice Creator -->
+                    <div id="multipleChoiceCreator" class="hidden quiz-creator-section">
+                        <div class="creator-header">
+                            <button class="btn-back" onclick="backToTypeSelector()">← Quay lại</button>
+                            <div>
+                                <h2>✅ Tạo câu hỏi Trắc nghiệm</h2>
+                                <p>Thêm câu hỏi với nhiều lựa chọn</p>
+                            </div>
+                        </div>
+                        
+                        <div class="creator-card">
+                            <div class="form-group-modern">
+                                <label for="questionText"><span class="label-icon">❓</span> Nội dung câu hỏi</label>
+                                <textarea id="questionText" rows="3" placeholder="Nhập nội dung câu hỏi của bạn..." class="modern-textarea"></textarea>
+                            </div>
+                            
+                            <div class="form-group-modern">
+                                <label><span class="label-icon">📋</span> Các đáp án</label>
+                                <p class="form-hint">Nhập đáp án và chọn đáp án đúng</p>
+                                <div class="answers-grid-modern" id="answersGridMcq"></div>
+                                <button class="btn-add-answer" onclick="addMcqAnswerField()">+ Thêm đáp án</button>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button class="btn btn-primary btn-large" id="add-mcq-btn">
+                                    <span>➕</span> Thêm câu hỏi
+                                </button>
+                                <button class="btn btn-secondary" onclick="clearMcqForm()">
+                                    <span>🗑️</span> Xóa form
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- True/False Creator -->
+                    <div id="trueFalseCreator" class="hidden quiz-creator-section">
+                        <div class="creator-header">
+                            <button class="btn-back" onclick="backToTypeSelector()">← Quay lại</button>
+                            <div>
+                                <h2>⭕❌ Tạo câu hỏi Đúng/Sai</h2>
+                                <p>Thêm các mệnh đề và đánh dấu đúng/sai</p>
+                            </div>
+                        </div>
+                        
+                        <div class="creator-card">
+                            <div class="form-group-modern">
+                                <label for="questionTextTf"><span class="label-icon">❓</span> Nội dung câu hỏi gốc</label>
+                                <textarea id="questionTextTf" rows="3" placeholder="Nhập câu hỏi gốc (không bắt buộc)..." class="modern-textarea"></textarea>
+                            </div>
+                            
+                            <div class="form-group-modern">
+                                <label><span class="label-icon">📝</span> Các mệnh đề</label>
+                                <p class="form-hint">Nhập mệnh đề và kéo icon O (đúng) hoặc X (sai)</p>
+                                <div class="tf-statements-container" id="tfStatementsContainer"></div>
+                                <div class="drag-icons-modern">
+                                    <div class="drag-icon-modern correct" draggable="true" data-answer="true">
+                                        <span class="icon-large">O</span>
+                                        <span class="icon-label">Đúng</span>
+                                    </div>
+                                    <div class="drag-icon-modern incorrect" draggable="true" data-answer="false">
+                                        <span class="icon-large">X</span>
+                                        <span class="icon-label">Sai</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button class="btn btn-info btn-large" id="add-tf-btn">
+                                    <span>➕</span> Thêm câu hỏi
+                                </button>
+                                <button class="btn btn-secondary" onclick="clearTfForm()">
+                                    <span>🗑️</span> Xóa form
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Essay Creator -->
+                    <div id="essayCreator" class="hidden quiz-creator-section">
+                        <div class="creator-header">
+                            <button class="btn-back" onclick="backToTypeSelector()">← Quay lại</button>
+                            <div>
+                                <h2>📄 Tạo câu hỏi Tự luận</h2>
+                                <p>Thêm câu hỏi yêu cầu trả lời chi tiết</p>
+                            </div>
+                        </div>
+                        
+                        <div class="creator-card">
+                            <div class="form-group-modern">
+                                <label for="questionTextEssay"><span class="label-icon">❓</span> Nội dung câu hỏi</label>
+                                <textarea id="questionTextEssay" rows="4" placeholder="Nhập câu hỏi tự luận của bạn..." class="modern-textarea"></textarea>
+                            </div>
+                            
+                            <div class="form-group-modern">
+                                <label for="essayGuidelines"><span class="label-icon">💡</span> Hướng dẫn trả lời (không bắt buộc)</label>
+                                <textarea id="essayGuidelines" rows="3" placeholder="Nhập hướng dẫn hoặc gợi ý cho học sinh..." class="modern-textarea"></textarea>
+                            </div>
+                            
+                            <div class="form-group-modern">
+                                <label for="essayExpectedAnswer"><span class="label-icon">✏️</span> Đáp án mẫu (không bắt buộc)</label>
+                                <textarea id="essayExpectedAnswer" rows="5" placeholder="Nhập đáp án mẫu để tham khảo..." class="modern-textarea"></textarea>
+                            </div>
+                            
+                            <div class="form-group-modern">
+                                <label><span class="label-icon">⚙️</span> Cài đặt</label>
+                                <div class="essay-settings">
+                                    <div class="setting-row">
+                                        <label for="essayMinWords">Số từ tối thiểu:</label>
+                                        <input type="number" id="essayMinWords" value="50" min="0" max="1000" class="modern-input-small">
+                                    </div>
+                                    <div class="setting-row">
+                                        <label for="essayMaxWords">Số từ tối đa:</label>
+                                        <input type="number" id="essayMaxWords" value="500" min="0" max="5000" class="modern-input-small">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button class="btn btn-success btn-large" id="add-essay-btn">
+                                    <span>➕</span> Thêm câu hỏi
+                                </button>
+                                <button class="btn btn-secondary" onclick="clearEssayForm()">
+                                    <span>🗑️</span> Xóa form
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Questions List -->
+                    <div class="section-box-modern" id="questionsList">
+                        <h2>📋 Danh sách câu hỏi đã tạo</h2>
+                        <div id="questionsListContent"></div>
+                    </div>
+                    
+                    <!-- Settings & Export -->
+                    <div class="section-box-modern" id="settingsExportSection">
+                        <h2>⚙️ Cài đặt & Xuất Quiz</h2>
+                        
+                        <div class="form-group-modern">
+                            <label for="quizTitleInput"><span class="label-icon">📝</span> Tên Quiz</label>
+                            <input type="text" id="quizTitleInput" placeholder="Nhập tên quiz..." class="modern-input">
+                        </div>
+                        
+                        <div class="form-group-modern">
+                            <label for="quizCategory"><span class="label-icon">📂</span> Danh mục</label>
+                            <select id="quizCategory" class="modern-select">
+                                <option value="">Chọn danh mục (không bắt buộc)</option>
+                                <option value="Toán học">📐 Toán học</option>
+                                <option value="Văn học">📚 Văn học</option>
+                                <option value="Khoa học">🔬 Khoa học</option>
+                                <option value="Lịch sử">📜 Lịch sử</option>
+                                <option value="Địa lý">🌍 Địa lý</option>
+                                <option value="Tiếng Anh">🔤 Tiếng Anh</option>
+                                <option value="Tin học">💻 Tin học</option>
+                                <option value="Nghệ thuật">🎨 Nghệ thuật</option>
+                                <option value="Thể dục">⚽ Thể dục</option>
+                                <option value="Khác">📝 Khác</option>
+                            </select>
+                        </div>
+                        
+                        <div class="settings-grid-modern">
+                            <div class="setting-card">
+                                <input type="checkbox" id="shuffleQuestionsSetting" checked>
+                                <label for="shuffleQuestionsSetting">
+                                    <span class="setting-icon">🔀</span>
+                                    <div>
+                                        <div class="setting-title">Xáo trộn câu hỏi</div>
+                                        <div class="setting-desc">Thay đổi thứ tự câu hỏi mỗi lần làm</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="setting-card">
+                                <input type="checkbox" id="shuffleAnswersSetting" checked>
+                                <label for="shuffleAnswersSetting">
+                                    <span class="setting-icon">🔄</span>
+                                    <div>
+                                        <div class="setting-title">Xáo trộn đáp án</div>
+                                        <div class="setting-desc">Thay đổi thứ tự đáp án</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="setting-card">
+                                <input type="checkbox" id="autoAdvanceSetting" checked>
+                                <label for="autoAdvanceSetting">
+                                    <span class="setting-icon">⏩</span>
+                                    <div>
+                                        <div class="setting-title">Tự động chuyển câu</div>
+                                        <div class="setting-desc">Chuyển sang câu tiếp theo tự động</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="setting-card">
+                                <input type="checkbox" id="soundEnabledSetting" checked>
+                                <label for="soundEnabledSetting">
+                                    <span class="setting-icon">🔊</span>
+                                    <div>
+                                        <div class="setting-title">Âm thanh</div>
+                                        <div class="setting-desc">Phát âm thanh khi trả lời</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="setting-card">
+                                <input type="checkbox" id="timerModeSetting">
+                                <label for="timerModeSetting">
+                                    <span class="setting-icon">⏱️</span>
+                                    <div>
+                                        <div class="setting-title">Bật đếm giờ</div>
+                                        <div class="setting-desc">Giới hạn thời gian làm bài</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="setting-card timer-duration-setting hidden">
+                                <label>
+                                    <span class="setting-icon">⏰</span>
+                                    <div>
+                                        <div class="setting-title">Thời gian (phút)</div>
+                                        <input type="number" id="timerDuration" min="1" max="180" value="10" class="modern-input-small">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="export-actions-modern">
+                            <button class="btn btn-success btn-icon" id="preview-quiz-btn">
+                                <span>👁️</span> Xem trước
+                            </button>
+                            <button class="btn btn-primary btn-icon" id="save-to-library-btn">
+                                <span>💾</span> Lưu vào thư viện
+                            </button>
+                            <button class="btn btn-primary btn-icon" id="export-json-btn">
+                                <span>📥</span> Tải về JSON
+                            </button>
+                            <button class="btn btn-info btn-icon" id="share-link-btn">
+                                <span>🔗</span> Chia sẻ link
+                            </button>
+                        </div>
+                        
+                        <div class="share-link-row hidden" id="share-link-row">
+                            <input type="text" id="shareLinkOutput" readonly placeholder="Link chia sẻ sẽ hiển thị tại đây" class="modern-input">
+                            <button class="btn btn-primary" id="copy-share-link-btn" disabled>📋 Copy</button>
+                        </div>
+                        <div class="share-link-hint hidden" id="share-link-hint">
+                            💡 Gửi link này cho học sinh để họ có thể làm bài trực tiếp
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Library View (NEW) -->
+                <div id="libraryView" class="hidden">
+                    <div class="page-header">
+                        <h1 class="page-title">Thư viện Quiz 📚</h1>
+                        <p class="page-subtitle">Quản lý và xem lại các quiz đã tạo</p>
+                    </div>
+                    
+                    <div class="search-bar-container">
+                        <input type="text" id="librarySearchInput" placeholder="🔍 Tìm kiếm quiz theo tên hoặc danh mục..." class="search-bar">
+                    </div>
+                    
+                    <div class="library-filters">
+                        <button class="filter-btn active" data-category="all">Tất cả</button>
+                        <button class="filter-btn" data-category="Toán học">📐 Toán học</button>
+                        <button class="filter-btn" data-category="Văn học">📚 Văn học</button>
+                        <button class="filter-btn" data-category="Khoa học">🔬 Khoa học</button>
+                        <button class="filter-btn" data-category="Khác">📝 Khác</button>
+                    </div>
+                    
+                    <div class="library-grid" id="libraryGrid"></div>
+                </div>
+                
+                <!-- Student View -->
+                <div id="studentView" class="hidden">
+                    <div class="quiz-upload-area" id="quizUploadArea">
+                        <div id="resumeQuizPrompt" class="hidden">
+                            <h3><i class="fas fa-history"></i> Tìm thấy bài làm dang dở!</h3>
+                            <p style="margin: 15px 0;">Bạn có muốn tiếp tục bài làm trước đó không?</p>
+                            <button id="resumeBtn" class="btn btn-success">✓ Tiếp tục</button>
+                            <button id="startNewBtn" class="btn btn-danger">✗ Bắt đầu bài mới</button>
+                        </div>
+                        <div id="uploadBox">
+                            <h2>Bắt đầu làm bài!</h2>
+                            <p style="margin: 20px 0;">Tải lên tệp quiz (.json) mà bạn đã được cung cấp.</p>
+                            <input type="file" id="quizFileInput" accept=".json" class="hidden">
+                            <label for="quizFileInput" id="file-upload-label"><div style="font-size: 3rem;">📤</div><div>Nhấn để chọn tệp</div></label>
+                            
+                            <div style="margin: 30px 0; text-align: center;">
+                                <div style="display: flex; align-items: center; gap: 15px; margin: 20px 0;">
+                                    <div style="flex: 1; height: 1px; background: var(--border-color);"></div>
+                                    <span style="color: var(--text-secondary); font-weight: 600;">HOẶC</span>
+                                    <div style="flex: 1; height: 1px; background: var(--border-color);"></div>
+                                </div>
+                                <h3 style="margin: 20px 0 15px;">Nhập Link Quiz</h3>
+                                <p style="margin: 0 0 15px; color: var(--text-secondary); font-size: 0.95rem;">Dán link chia sẻ quiz để làm bài ngay (ví dụ: https://quoliquizziz.page.gd/#id=3YHKFB9DG).</p>
+                                <div style="display: flex; gap: 10px; margin: 15px 0;">
+                                    <input type="text" id="quizLinkInput" placeholder="Dán link quiz tại đây... (ví dụ: https://...)" style="flex: 1; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 1rem; background: var(--container-bg); color: var(--text-color); transition: all 0.3s;">
+                                    <button id="loadQuizFromLinkBtn" class="btn btn-primary" style="margin: 0;">🔗 Tải Quiz</button>
+                                </div>
+                                <div class="link-loading-container" id="linkLoadingContainer">
+                                    <div class="link-loading-spinner"></div>
+                                    <span>Đang tải quiz từ link...</span>
+                                </div>
+                                <div id="linkErrorMsg" style="color: var(--danger-color); margin-top: 10px; display: none; font-size: 0.9rem; padding: 12px; background: rgba(220, 53, 69, 0.1); border-radius: 8px; font-weight: 600;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quiz-play-area hidden" id="quizPlayArea">
+                        <div class="quiz-intro-overlay hidden" id="quizIntroOverlay">
+                            <div class="quiz-intro-card">
+                                <div style="font-weight: 800; color: var(--primary-color); letter-spacing: 0.3px;">Thông báo bài làm</div>
+                                <h3 id="quizIntroTitle">Bài làm sẵn sàng</h3>
+                                <p style="margin: 6px 0 10px; color: var(--text-secondary);">Kiểm tra thông tin bên dưới rồi nhấn bắt đầu để vào làm bài.</p>
+                                <div class="quiz-intro-meta">
+                                    <div class="quiz-intro-pill">📄 <span id="quizIntroQuestionCount">-- câu hỏi</span></div>
+                                    <div class="quiz-intro-pill">🔀 <span id="quizIntroShuffle">Xáo trộn: --</span></div>
+                                    <div class="quiz-intro-pill">⏩ <span id="quizIntroAutoAdvance">Chế độ chuyển câu: --</span></div>
+                                    <div class="quiz-intro-pill hidden" id="quizIntroTimer">⏱️ <span id="quizIntroTimerText">Giới hạn thời gian: --</span></div>
+                                </div>
+                                <div class="quiz-intro-pill" id="quizIntroExtra" style="width: 100%;">ℹ️ Cấu hình bài làm sẽ được áp dụng như trên. Nếu thấy chưa đúng, hãy quay lại kiểm tra link.</div>
+                                <div class="quiz-intro-actions">
+                                    <button class="btn btn-success" id="quizIntroStartBtn">🚀 Bắt đầu làm</button>
+                                    <button class="btn btn-danger" id="quizIntroCancelBtn">↩️ Quay lại</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quiz-top-bar">
+                            <div class="brand-badge" id="brand-badge-quiz">QuoQuizizz</div>
+                            <button class="quiz-top-bar-btn theme-toggle-mobile" id="mobileThemeToggle">🌙</button>
+                            <button class="quiz-top-bar-btn" id="mobileSettingsBtn">⚙️</button>
+                            <button class="quiz-top-bar-btn">Thưởng</button>
+                            <button class="quiz-top-bar-menu" onclick="toggleQuizMenu()">☰</button>
+                        </div>
+                        <div class="quiz-header">
+                            <div class="quiz-progress-badge" id="quizProgress"></div>
+                            <h3 id="quizTitle" style="color: white; margin-bottom: 0;"></h3>
+                            <div class="quiz-timer hidden" id="quizTimer">
+                                <span class="timer-icon">⏱️</span>
+                                <span class="timer-display" id="timerDisplay">00:00</span>
+                                <button class="timer-pause-btn" id="timerPauseBtn" title="Tạm dừng timer">⏸️</button>
+                            </div>
+                        </div>
+                        <div class="quiz-score-header">
+                            <div style="display: flex; gap: 30px;">
+                                <div class="quiz-rank-item">
+                                    <span class="quiz-rank-badge" id="quizRank">1st</span>
+                                    <span class="quiz-rank-label">Xếp hạng</span>
+                                </div>
+                                <div class="quiz-rank-item">
+                                    <span style="font-weight: 700; color: #FFD700;">🏆 <span id="quizGold">0</span></span>
+                                    <span class="quiz-rank-label">Vàng</span>
+                                </div>
+                                <div class="quiz-rank-item">
+                                    <span style="font-weight: 700; color: #FFA500;">💎 <span id="quizCoins">0</span></span>
+                                    <span class="quiz-rank-label">Xu</span>
+                                </div>
+                            </div>
+                            <div class="quiz-score-display">
+                                <span id="quizScoreDisplay">0</span> điểm
+                            </div>
+                        </div>
+                        
+                        <div id="quizQuestionText" class="quiz-question-text"></div>
+                        <div id="studentDragIconsTop" class="drag-icons hidden">
+                            <div class="drag-icon correct" draggable="true" data-answer="true">O</div>
+                            <div class="drag-icon incorrect" draggable="true" data-answer="false">X</div>
+                        </div>
+                        <div class="quiz-main-content">
+                            <div id="quizOptionsContainer"></div>
+                            <div id="studentDragIconsSide" class="drag-icons hidden">
+                                <div class="drag-icon correct" draggable="true" data-answer="true">O</div>
+                                <div class="drag-icon incorrect" draggable="true" data-answer="false">X</div>
+                            </div>
+                        </div>
+                        <div id="action-btn-container"><button class="btn btn-primary hidden" id="action-btn"></button></div>
+                    </div>
+                    <div id="quizFeedback" style="color: white; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.3); font-size: 2rem; position: fixed; left: 50%; top: 20%; transform: translateX(-50%) translateY(-50%); pointer-events: none; z-index: 9999;"></div>
+                    <div class="quiz-results-area hidden" id="quizResultsArea">
+                        <h2>🎉 Hoàn thành!</h2>
+                        <p id="quizScore" style="font-size: 1.8rem; font-weight: bold;"></p>
+                        <p id="quizPercentage" style="font-size: 1.3rem;"></p>
+                        <p id="quizEvaluation" style="font-size: 1.3rem; font-style: italic; margin-bottom: 20px;"></p>
+                        <button id="redemptionQuizBtn" class="btn btn-info hidden">🔁 Làm lại câu sai</button>
+                        <button id="restart-quiz-btn" class="btn btn-success">Làm lại từ đầu</button>
+                        <button id="load-another-quiz-btn" class="btn btn-primary">Tải Quiz khác</button>
+                        <div id="quizReviewContainer"></div>
+                    </div>
+                </div>
+                
+                <!-- History View -->
+                <!-- History View -->
+                <div id="historyView" class="hidden">
+                    <div class="page-header">
+                        <h1 class="page-title">Lịch sử làm bài 📖</h1>
+                        <p class="page-subtitle">Xem lại các bài quiz đã làm và tiếp tục bài chưa hoàn thành</p>
+                    </div>
+                    
+                    <div class="search-bar-container">
+                        <input type="text" id="historySearchInput" placeholder="🔍 Tìm kiếm lịch sử theo tên quiz..." class="search-bar">
+                    </div>
+                    
+                    <div class="history-filters">
+                        <button class="history-filter-btn active" data-filter="all">📋 Tất cả</button>
+                        <button class="history-filter-btn" data-filter="completed">✅ Đã hoàn thành</button>
+                        <button class="history-filter-btn" data-filter="unfinished">⏳ Chưa hoàn thành</button>
+                        <button class="history-filter-btn" data-filter="clear" style="margin-left: auto; background: var(--danger-color); color: white; border-color: var(--danger-color);">🗑️ Xóa lịch sử</button>
+                    </div>
+                    
+                    <div class="history-grid" id="historyGrid"></div>
+                </div>
+            </div>
+            
+            <!-- Theme Settings Modal -->
+            <div class="theme-modal hidden" id="themeModal">
+                <div class="theme-modal-content">
+                    <div class="theme-modal-header">
+                        <h3>⚙️ Theme & Cài đặt</h3>
+                        <button class="theme-modal-close" id="themeModalClose">✕</button>
+                    </div>
+                    <div class="theme-modal-body">
+                        <div class="theme-section">
+                            <h4>🎨 Theme màu sắc</h4>
+                            <div class="theme-options">
+                                <button class="theme-option" data-theme="default">
+                                    <span class="theme-preview" style="background: linear-gradient(135deg, #8854C0, #F037A5);"></span>
+                                    <span>Mặc định</span>
+                                </button>
+                                <button class="theme-option" data-theme="tet">
+                                    <span class="theme-preview" style="background: linear-gradient(135deg, #C41E3A, #FFB81C);"></span>
+                                    <span>Tết 🎆</span>
+                                </button>
+                                <button class="theme-option" data-theme="christmas">
+                                    <span class="theme-preview" style="background: linear-gradient(135deg, #228B22, #DC143C);"></span>
+                                    <span>Giáng Sinh 🎄</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="theme-section">
+                            <h4>💡 Chế độ sáng tối</h4>
+                            <button class="theme-toggle" id="themeModalToggle">
+                                <span class="toggle-icon" id="toggleIcon">🌙</span>
+                                <span class="toggle-text" id="toggleText">Chế độ tối</span>
+                            </button>
+                        </div>
+                        <div class="theme-section">
+                            <h4>🕐 Chế độ chuyển câu</h4>
+                            <select id="studentAutoAdvanceSelect" style="width:100%; padding: 10px; border-radius: 10px; border: 2px solid var(--border-color); background: var(--container-bg); color: var(--text-color);">
+                                <option value="manual">Thủ công (Nhấn nút Next)</option>
+                                <option value="3000">Tự động - 3 giây</option>
+                                <option value="5000" selected>Tự động - 5 giây</option>
+                                <option value="10000">Tự động - 10 giây</option>
+                            </select>
+                        </div>
+                        <div class="theme-section">
+                            <h4>🔈 Âm thanh phản hồi</h4>
+                            <label style="display:flex; align-items:center; gap:10px; font-weight:600; cursor:pointer;">
+                                <input type="checkbox" id="soundEnabledToggle" checked style="width:20px; height:20px; accent-color: var(--primary-color);">
+                                Bật âm thanh đúng/sai
+                            </label>
+                            <p style="margin-top:8px; color: var(--text-secondary); font-size: 0.95rem;">Tắt nếu bạn muốn làm bài trong im lặng.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Modal -->
+            <div id="previewModal" class="modal">
+                <div class="modal-content">
+                    <span class="modal-close" id="modal-close-btn">&times;</span>
+                    <h2>Xem trước Quiz</h2>
+                    <div id="previewContent"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Complete Application Script -->
+    <script src="js/app.js"></script>
+</body>
+</html>

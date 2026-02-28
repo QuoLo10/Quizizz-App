@@ -1,0 +1,38 @@
+/* CSS Variables - Colors and spacing */
+
+:root {
+    --primary-color: #8854C0;
+    --secondary-color: #F037A5;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --info-color: #17a2b8;
+    --bg-color: #F9F9FB;
+    --text-color: #333;
+    --text-secondary: #6B6B6B;
+    --border-color: #E5E5E5;
+    --container-bg: white;
+    --sidebar-width: 240px;
+}
+
+/* Dark Theme Variables */
+body.dark-theme {
+    --bg-color: #1a1a2e;
+    --text-color: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --border-color: #2a2a4e;
+    --container-bg: #16213e;
+}
+
+/* Tet Theme Variables */
+body.tet-theme {
+    --primary-color: #C41E3A;
+    --secondary-color: #FFB81C;
+    --info-color: #F4D03F;
+}
+
+/* Christmas Theme Variables */
+body.christmas-theme {
+    --primary-color: #228B22;
+    --secondary-color: #DC143C;
+    --info-color: #1e90ff;
+}
